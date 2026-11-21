@@ -1,22 +1,23 @@
 #!/usr/bin/env python3
-"""Entry program for make.fun news-image-20261120.
+"""Entry program for news-image-20261120.
 
-Copies the repository's entry.png byte-for-byte to /output/entry.png.
-Standard library only, no network, fully deterministic: the output bytes
-are always identical to the shipped image.
+Copies the generated front page (entry.png, in this same directory)
+byte-for-byte to $MAKEFUN_OUTPUT_DIR/entry.png (default /output).
+Standard library only; deterministic.
 """
 
 import os
 import shutil
-from pathlib import Path
+import sys
 
-HERE = Path(__file__).resolve().parent
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 
-def main() -> None:
-    out_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
-    out_dir.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(HERE / "entry.png", out_dir / "entry.png")
+def main():
+    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
+    os.makedirs(out_dir, exist_ok=True)
+    shutil.copyfile(os.path.join(HERE, "entry.png"),
+                    os.path.join(out_dir, "entry.png"))
 
 
 if __name__ == "__main__":

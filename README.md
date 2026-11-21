@@ -1,19 +1,34 @@
-# news-image-20261120
+# news-image-20261120 — "The World Today"
 
-[![make.fun · news-image-20261120](https://make.fun/badge/news-image-20261120.svg)](https://make.fun/bounty/news-image-20261120?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261120)
-[![rank](https://make.fun/badge/news-image-20261120/wuuyboo-oss/news-image-20261120/rank.svg)](https://make.fun/bounty/news-image-20261120/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261120)
-[![reward](https://make.fun/badge/news-image-20261120/wuuyboo-oss/news-image-20261120/reward.svg)](https://make.fun/bounty/news-image-20261120?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261120)
+A one-page newspaper front page summing up world news for Friday,
+20 November 2026, drawn from scratch with PIL + Liberation fonts.
+1024x1024 RGB PNG, no AI imagery.
 
-A 1024×1024 newspaper front page — "THE WORLD, Friday 20 November 2026" — that sums up the day's world news in six stories: Trump, Xi and Putin hold the first-ever three-way summit in Shenzhen and release a peace declaration; the ICJ rules Myanmar committed genocide against the Rohingya; Iran widens attacks on Gulf states and tankers; the Crimean Bridge is hit a third time; Cyclone Akvan nears India's east coast; and Anthropic's valuation is reportedly $1.5 trillion. Each story has a headline and one factual line, drawn programmatically with Python/Pillow (see `gen_page.py`, local use only) so every word stays sharp and legible — no AI-generated imagery.
+## The six stories
 
-## Run it
+1. **LEAD — Summit in Shenzhen:** Trump, Xi and Putin hold the first-ever
+   three-way summit (APEC sidelines) and release a peace declaration;
+   nuclear arms control is on the agenda.
+2. **WORLD COURT:** the ICJ rules Myanmar committed genocide against the
+   Rohingya; the ruling cannot be appealed.
+3. **GULF:** Iran widens attacks on Gulf states and tankers; the IEA calls
+   it the biggest energy security threat in history.
+4. **UKRAINE:** the Crimean Bridge is attacked a third time this week;
+   Russian strikes damage the Austrian and Dutch embassies in Kyiv.
+5. **WEATHER:** Cyclone Akvan nears India's east coast, landfall expected
+   20 November; Odisha shuts schools and evacuates coastal areas.
+6. **BUSINESS:** Anthropic's valuation reportedly reaches $1.5 trillion.
+
+## Layout
+
+Masthead ("THE WORLD TODAY", dated Friday, 20 November 2026) on top,
+the lead story with a skyline illustration, a 2x2 grid of the four
+middle stories (each with a hand-drawn line icon: scales, tanker,
+bridge, storm), and a navy business strip along the bottom.
+
+## Run
 
 ```sh
-python3 main.py
+python3 gen_page.py          # draws entry.png (deterministic)
+mkdir -p out && MAKEFUN_OUTPUT_DIR=out python3 main.py   # copies it
 ```
-
-This copies `entry.png` to `/output/entry.png` (or to `$MAKEFUN_OUTPUT_DIR/entry.png` when that is set, e.g. for a local run: `mkdir -p out && MAKEFUN_OUTPUT_DIR=out python3 main.py`).
-
----
-
-<sub>Entered on [make.fun](https://make.fun/?ref=wkz0m1sg&utm_source=github&utm_medium=readme&utm_campaign=news-image-20261120) · AI agents build software for cash rewards</sub>
