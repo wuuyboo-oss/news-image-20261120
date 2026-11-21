@@ -136,19 +136,39 @@ def icon_tanker(draw, x, y, s):
 
 
 def icon_bridge(draw, x, y, s):
-    """Suspension bridge: deck, two towers, main cable, hangers."""
-    draw.line([(x, y + 0.72 * s), (x + s, y + 0.72 * s)], fill=INK, width=3)
+    """Suspension bridge: deck, two towers, sagging main cable, hangers."""
+    deck_y = y + 0.72 * s
+    top_y = y + 0.12 * s
+    # deck
+    draw.line([(x, deck_y), (x + s, deck_y)], fill=INK, width=3)
+    # towers with caps
     for tx in (0.22, 0.72):
         bx = x + tx * s
-        draw.line([(bx, y + 0.18 * s), (bx, y + 0.72 * s)], fill=INK, width=3)
-        draw.line([(bx - 0.05 * s, y + 0.18 * s), (bx + 0.05 * s, y + 0.18 * s)],
+        draw.line([(bx, top_y), (bx, deck_y)], fill=INK, width=3)
+        draw.line([(bx - 0.05 * s, top_y), (bx + 0.05 * s, top_y)],
                   fill=INK, width=3)
-    # main cable: sagging arc between towers, dipping below the deck line
-    draw.arc([x + 0.05 * s, y - 0.05 * s, x + 0.95 * s, y + 1.05 * s],
-             20, 160, fill=INK, width=2)
-    for hx in (0.30, 0.38, 0.47, 0.55, 0.63):
-        draw.line([(x + hx * s, y + 0.42 * s), (x + hx * s, y + 0.72 * s)],
-                  fill=INK, width=1)
+    # main cable: parabola sagging between the tower tops, vertex above deck
+    mid = x + 0.47 * s
+    half = 0.25 * s
+    vertex_y = y + 0.55 * s
+    cable = []
+    for i in range(41):
+        fx = x + (0.22 + 0.50 * i / 40) * s
+        t = (fx - mid) / half
+        cable.append((fx, vertex_y + (top_y - vertex_y) * t * t))
+    draw.line(cable, fill=INK, width=2)
+    # side spans: tower tops down to the deck ends
+    draw.line([(x + 0.22 * s, top_y), (x + 0.02 * s, deck_y)], fill=INK,
+              width=2)
+    draw.line([(x + 0.72 * s, top_y), (x + 0.98 * s, deck_y)], fill=INK,
+              width=2)
+    # hangers: verticals from the cable down to the deck
+    for hx in (0.28, 0.35, 0.42, 0.52, 0.59, 0.66):
+        fx = x + hx * s
+        t = (fx - mid) / half
+        cy = vertex_y + (top_y - vertex_y) * t * t
+        draw.line([(fx, cy), (fx, deck_y)], fill=INK, width=1)
+    # water below
     draw.line([(x + 0.05 * s, y + 0.86 * s), (x + 0.95 * s, y + 0.86 * s)],
               fill=INK, width=2)
     draw.line([(x + 0.05 * s, y + 0.94 * s), (x + 0.95 * s, y + 0.94 * s)],
@@ -156,15 +176,28 @@ def icon_bridge(draw, x, y, s):
 
 
 def icon_storm(draw, x, y, s):
-    """Cyclone: spiral cloud arcs above slanted rain strokes."""
-    cx, cy = x + s / 2, y + 0.38 * s
-    for r, start, end in ((0.42, 200, 20), (0.30, 160, 340), (0.18, 120, 300)):
-        draw.arc([cx - r * s, cy - r * s * 0.7, cx + r * s, cy + r * s * 0.7],
-                 start, end, fill=INK, width=3)
-    for i in range(5):
-        rx = x + (0.12 + i * 0.18) * s
-        draw.line([(rx, y + 0.72 * s), (rx - 0.06 * s, y + 0.92 * s)],
-                  fill=RED if i % 2 else INK, width=3)
+    """Thunderstorm: rain cloud, lightning bolt, slanted rain."""
+    # cloud: overlapping filled bumps, closed by a straight flat base
+    bumps = [(0.30, 0.30, 0.17), (0.50, 0.22, 0.21), (0.70, 0.30, 0.17)]
+    for fx, fy, fr in bumps:
+        cx, cy, r = x + fx * s, y + fy * s, fr * s
+        draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=PAPER,
+                     outline=INK, width=3)
+    # flatten the cloud bottom: paint over the dangling bump arcs
+    draw.rectangle([x + 0.13 * s, y + 0.44 * s, x + 0.87 * s, y + 0.50 * s],
+                   fill=PAPER)
+    draw.line([(x + 0.13 * s, y + 0.44 * s), (x + 0.87 * s, y + 0.44 * s)],
+              fill=INK, width=3)
+    # lightning bolt below the cloud, left of centre
+    bolt = [(0.46, 0.48), (0.60, 0.48), (0.51, 0.64), (0.61, 0.64),
+            (0.40, 0.90), (0.47, 0.66), (0.38, 0.66)]
+    draw.polygon([(x + fx * s, y + fy * s) for fx, fy in bolt], fill=RED)
+    # rain: two rows of slanted strokes on the right, clear of the bolt
+    for rx in (0.68, 0.79, 0.90):
+        draw.line([(x + rx * s, y + 0.56 * s),
+                   (x + (rx - 0.05) * s, y + 0.74 * s)], fill=INK, width=3)
+        draw.line([(x + rx * s, y + 0.80 * s),
+                   (x + (rx - 0.05) * s, y + 0.92 * s)], fill=INK, width=3)
 
 
 def icon_chart(draw, x, y, s):
